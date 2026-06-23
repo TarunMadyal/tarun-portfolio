@@ -27,7 +27,7 @@ const projects: Project[] = [
     tagline: "Talent Discovery Platform",
     description: "A talent sourcing and hiring platform connecting businesses with the right professionals, built for streamlined recruitment.",
     contribution: "Built and maintained the website — structure, UI, user-facing features, and performance.",
-    icon: Briefcase, accent: "#a78bfa", gradientFrom: "#7c3aed", gradientTo: "#9333ea",
+    icon: Briefcase, accent: "#2dd4bf", gradientFrom: "#0d9488", gradientTo: "#06b6d4",
     tags: ["Web Dev", "UI/UX", "Platform"],
   },
   {

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Mail, Phone, ArrowRight, Copy, Check } from "lucide-react";
+import { Mail, Phone, ArrowRight, ArrowUpRight, Copy, Check } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
 import { SectionLabel, RevealTitle } from "./Reveal";
 import { useRipple } from "./useRipple";
@@ -14,9 +14,9 @@ const contactItems = [
     value: "tarunmadyal@gmail.com",
     href: "mailto:tarunmadyal@gmail.com",
     copyText: "tarunmadyal@gmail.com",
-    accent: "#a78bfa",
-    accentBg: "rgba(167,139,250,0.1)",
-    accentBorder: "rgba(167,139,250,0.2)",
+    accent: "#2dd4bf",
+    accentBg: "rgba(45,212,191,0.1)",
+    accentBorder: "rgba(45,212,191,0.2)",
   },
   {
     icon: Phone,
@@ -160,13 +160,27 @@ export default function Contact() {
             {contactItems.map((item, i) => {
               const Icon = item.icon;
               const isCopied = copied === item.label;
+              const isExternal = item.href.startsWith("http");
+              // Entries without a copy action (LinkedIn / GitHub) become a
+              // single clickable card so the whole row navigates.
+              const asLink = !item.copyText;
+              const Wrapper = (asLink ? motion.a : motion.div) as typeof motion.a;
+
               return (
-                <motion.div
+                <Wrapper
                   key={item.label}
+                  {...(asLink
+                    ? {
+                        href: item.href,
+                        target: isExternal ? "_blank" : undefined,
+                        rel: isExternal ? "noopener noreferrer" : undefined,
+                        "data-cursor": "hover",
+                      }
+                    : {})}
                   initial={{ opacity: 0, x: 28 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.2 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-center justify-between rounded-xl group"
+                  className={`flex items-center justify-between rounded-xl group ${asLink ? "cursor-pointer" : ""}`}
                   style={{
                     background:  "var(--bg-card)",
                     border:      `1px solid ${item.accentBorder}`,
@@ -185,20 +199,27 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-xs mb-0.5" style={{ color: "var(--text-dim)" }}>{item.label}</p>
-                      <a
-                        href={item.href}
-                        target={item.href.startsWith("http") ? "_blank" : undefined}
-                        rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="text-sm font-medium cursor-pointer transition-colors duration-200"
-                        style={{ color: "var(--text-primary)" }}
-                        onMouseEnter={e => ((e.target as HTMLElement).style.color = item.accent)}
-                        onMouseLeave={e => ((e.target as HTMLElement).style.color = "var(--text-primary)")}
-                      >
-                        {item.value}
-                      </a>
+                      {asLink ? (
+                        <span
+                          className="text-sm font-medium transition-colors duration-200"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {item.value}
+                        </span>
+                      ) : (
+                        <a
+                          href={item.href}
+                          className="text-sm font-medium cursor-pointer transition-colors duration-200"
+                          style={{ color: "var(--text-primary)" }}
+                          onMouseEnter={e => ((e.target as HTMLElement).style.color = item.accent)}
+                          onMouseLeave={e => ((e.target as HTMLElement).style.color = "var(--text-primary)")}
+                        >
+                          {item.value}
+                        </a>
+                      )}
                     </div>
                   </div>
-                  {item.copyText && (
+                  {item.copyText ? (
                     <button
                       onClick={() => handleCopy(item.copyText!, item.label)}
                       className="p-2 rounded-lg cursor-pointer transition-opacity duration-200 hover:opacity-80"
@@ -207,8 +228,10 @@ export default function Contact() {
                     >
                       {isCopied ? <Check size={14} /> : <Copy size={14} />}
                     </button>
+                  ) : (
+                    <ArrowUpRight size={16} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" style={{ color: item.accent }} />
                   )}
-                </motion.div>
+                </Wrapper>
               );
             })}
           </div>

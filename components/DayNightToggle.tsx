@@ -69,7 +69,7 @@ export default function DayNightToggle() {
         {isDay && (
           <motion.div
             className="absolute"
-            style={{ right: 10, top: 8 }}
+            style={{ left: 10, top: 8 }}
             initial={{ opacity: 0, x: 6 }}
             animate={{ opacity: 0.85, x: 0 }}
             exit={{ opacity: 0, x: 6 }}
@@ -88,7 +88,7 @@ export default function DayNightToggle() {
       <motion.div
         className="absolute top-[4px] rounded-full overflow-hidden"
         style={{ width: 28, height: 28, zIndex: 2 }}
-        animate={{ x: isDay ? 4 : 48 }}
+        animate={{ x: isDay ? 48 : 4 }}
         transition={{ type: "spring", stiffness: 290, damping: 28 }}
       >
         {/* Sun disc (gradient via style, not animate — avoids Framer Motion warning) */}

@@ -14,7 +14,7 @@
   /* Borders */
   --border-card:      rgba(82, 183, 136, 0.10);
   --border-subtle:    rgba(255, 255, 255, 0.05);
-  --border-accent:    rgba(155, 142, 196, 0.22);
+  --border-accent:    rgba(82, 183, 136, 0.28);
 
   /* Text */
   --text-primary:     #DFF0E5;
@@ -23,22 +23,23 @@
   --text-dim:         #2D4E38;
   --text-faint:       #1E3328;
 
-  /* Accent colours — violet is brand colour, kept in both modes */
-  --accent-violet:      #9B8EC4;
-  --accent-violet-deep: #7C6FBA;
+  /* Accent colours — forest emerald/teal brand, kept in both modes.
+     (--accent-violet retained as a name for compatibility but is now green.) */
+  --accent-violet:      #5FBF99;
+  --accent-violet-deep: #3E9C78;
   --accent-blue:        #4A9ECC;
   --accent-green:       #52B788;
   --accent-gold:        #D4AC52;
 
   /* Composite gradient values */
-  --section-line:       linear-gradient(90deg, rgba(155,142,196,0.40) 0%, transparent 100%);
-  --orb-violet:         radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%);
+  --section-line:       linear-gradient(90deg, rgba(82,183,136,0.40) 0%, transparent 100%);
+  --orb-violet:         radial-gradient(circle, rgba(52,183,136,0.14) 0%, transparent 70%);
   --orb-blue:           radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%);
   --orb-green:          radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
-  --accent-violet-fade: rgba(155, 142, 196, 0.40);
+  --accent-violet-fade: rgba(82, 183, 136, 0.40);
 
   /* Glows */
-  --glow-violet: rgba(155, 142, 196, 0.22);
+  --glow-violet: rgba(82, 183, 136, 0.24);
   --glow-green:  rgba(82,  183, 136, 0.22);
   --glow-blue:   rgba(74,  158, 204, 0.15);
 
@@ -58,7 +59,7 @@
   /* Borders */
   --border-card:      rgba(0, 0, 0, 0.07);
   --border-subtle:    rgba(0, 0, 0, 0.05);
-  --border-accent:    rgba(107, 71, 184, 0.20);
+  --border-accent:    rgba(46, 125, 82, 0.22);
 
   /* Text */
   --text-primary:     #1A3A22;
@@ -68,21 +69,21 @@
   --text-faint:       #A8C4B0;
 
   /* Accents (darker for readability on light bg) */
-  --accent-violet:      #6B47B8;
-  --accent-violet-deep: #5030A8;
+  --accent-violet:      #247D5C;
+  --accent-violet-deep: #196048;
   --accent-blue:        #2B6CB0;
   --accent-green:       #2E7D52;
   --accent-gold:        #B07D00;
 
   /* Composite values */
-  --section-line:       linear-gradient(90deg, rgba(107,71,184,0.35) 0%, transparent 100%);
-  --orb-violet:         radial-gradient(circle, rgba(107,71,184,0.08) 0%, transparent 70%);
+  --section-line:       linear-gradient(90deg, rgba(46,125,82,0.35) 0%, transparent 100%);
+  --orb-violet:         radial-gradient(circle, rgba(46,125,82,0.09) 0%, transparent 70%);
   --orb-blue:           radial-gradient(circle, rgba(43,108,176,0.07) 0%, transparent 70%);
   --orb-green:          radial-gradient(circle, rgba(46,125,82,0.07) 0%, transparent 70%);
-  --accent-violet-fade: rgba(107, 71, 184, 0.35);
+  --accent-violet-fade: rgba(46, 125, 82, 0.35);
 
   /* Glows */
-  --glow-violet: rgba(107, 71, 184, 0.15);
+  --glow-violet: rgba(46, 125, 82, 0.16);
   --glow-green:  rgba(46, 125, 82, 0.15);
   --glow-blue:   rgba(43, 108, 176, 0.12);
 
@@ -201,14 +202,14 @@
 
   /* --- Gradient text (brand) --- */
   .gradient-text {
-    background: linear-gradient(135deg, #a78bfa, #60a5fa, #67e8f9);
+    background: linear-gradient(135deg, #34d399, #2dd4bf, #38bdf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   [data-theme="light"] .gradient-text {
-    background: linear-gradient(135deg, #7B52C4, #2B6CB0, #0891B2);
+    background: linear-gradient(135deg, #1F9E6B, #0E9488, #0E7490);
     -webkit-background-clip: text;
     background-clip: text;
   }
@@ -220,19 +221,19 @@
 
   /* --- Buttons --- */
   .btn-primary {
-    background:  linear-gradient(135deg, #7c3aed, #3b82f6);
-    box-shadow:  0 4px 24px rgba(124, 58, 237, 0.25);
+    background:  linear-gradient(135deg, #2E9E6B, #1F8F7A);
+    box-shadow:  0 4px 24px rgba(46, 158, 107, 0.28);
     transition:  all 0.25s ease;
   }
 
   .btn-primary:hover {
-    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 8px 32px rgba(46, 158, 107, 0.42);
     transform:  translateY(-1px);
   }
 
   [data-theme="light"] .btn-primary {
-    background: linear-gradient(135deg, #5B21B6, #2563EB);
-    box-shadow: 0 4px 20px rgba(91, 33, 182, 0.30);
+    background: linear-gradient(135deg, #1F8F5F, #117A66);
+    box-shadow: 0 4px 20px rgba(31, 143, 95, 0.30);
   }
 
   .btn-secondary {
@@ -413,7 +414,7 @@ section, header, footer, nav, article, aside {
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgba(82, 183, 136, 0.35);
   color: var(--text-primary);
 }
 

@@ -61,8 +61,8 @@ export default function Atmosphere() {
           width: "45%",
           height: "40%",
           background: light
-            ? "radial-gradient(circle, rgba(155,142,196,0.18), transparent 70%)"
-            : "radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%)",
+            ? "radial-gradient(circle, rgba(82,183,136,0.16), transparent 70%)"
+            : "radial-gradient(circle, rgba(52,183,136,0.12), transparent 70%)",
           animation: "glow-breathe 12s ease-in-out infinite",
         }}
       />

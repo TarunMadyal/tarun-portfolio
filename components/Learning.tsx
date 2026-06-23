@@ -35,7 +35,7 @@ const milestones = [
     description: "Security groups, VPC architecture, encryption at rest and in transit, IAM policies.",
     icon: Database,
     status: "upcoming" as const,
-    accent: "#a78bfa",
+    accent: "#38bdf8",
   },
 ];
 
@@ -101,8 +101,8 @@ export default function Learning() {
             className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
             style={{ color: "var(--text-primary)" }}
           >
-            Cloud Learning{" "}
-            <span className="gradient-text">Roadmap.</span>
+            Growing into the{" "}
+            <span className="gradient-text">cloud.</span>
           </motion.h2>
 
           <motion.p

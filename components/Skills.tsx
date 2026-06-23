@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
-  Code2, Globe, Palette, Presentation, KeyRound, Cloud, Boxes, LucideIcon,
+  Code2, PenTool, Palette, Presentation, KeyRound, Cloud, Boxes, LucideIcon,
 } from "lucide-react";
 import { SectionLabel, RevealTitle } from "./Reveal";
 
@@ -23,15 +23,8 @@ const skills: Skill[] = [
     title: "Web Development",
     level: 90, levelLabel: "Advanced",
     blurb: "HTML · CSS · JavaScript",
-    expertise: "Responsive, performant interfaces built with modern web standards and a sharp eye for detail.",
-    icon: Code2, accent: "#a78bfa",
-  },
-  {
-    title: "Website Building",
-    level: 88, levelLabel: "Advanced",
-    blurb: "End-to-end site delivery",
-    expertise: "From structure and UI to deployment and performance — I ship complete, polished websites.",
-    icon: Globe, accent: "#60a5fa",
+    expertise: "Responsive, performant interfaces built with modern web standards — from structure to deployment.",
+    icon: Code2, accent: "#34d399",
   },
   {
     title: "UI / UX Design",
@@ -41,11 +34,18 @@ const skills: Skill[] = [
     icon: Palette, accent: "#f472b6",
   },
   {
+    title: "Figma",
+    level: 84, levelLabel: "Proficient",
+    blurb: "Design & prototyping",
+    expertise: "Designing and prototyping interfaces in Figma — components, auto-layout and clean dev handoff.",
+    icon: PenTool, accent: "#fb7185",
+  },
+  {
     title: "Business Decks",
     level: 85, levelLabel: "Proficient",
     blurb: "Pitch & product decks",
     expertise: "Turning complex ideas into clear, persuasive narratives for investors and stakeholders.",
-    icon: Presentation, accent: "#34d399",
+    icon: Presentation, accent: "#2dd4bf",
   },
   {
     title: "AWS IAM",
@@ -165,11 +165,10 @@ function SkillNode({ skill, index }: { skill: Skill; index: number }) {
             <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
               {skill.expertise}
             </p>
-            <div className="flex items-center justify-between mt-2.5">
+            <div className="mt-2.5">
               <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: skill.accent }}>
                 {skill.levelLabel}
               </span>
-              <span className="text-[10px] font-mono" style={{ color: "var(--text-dim)" }}>{skill.level}%</span>
             </div>
             {/* pointer */}
             <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 rotate-45"

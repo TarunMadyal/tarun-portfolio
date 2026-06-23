@@ -19,40 +19,26 @@ const tags = [
   { icon: Sparkles, text: "Open to Opportunities" },
 ];
 
-/* Layered tree silhouette — gives the section parallax depth */
-function TreeLayer({ fill, opacity }: { fill: string; opacity: number }) {
-  return (
-    <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="w-full h-full" style={{ opacity }} aria-hidden>
-      <path fill={fill} d="M0 200 L0 120 L40 120 L60 70 L80 120 L120 120 L150 50 L180 120 L230 120 L260 90 L290 120 L340 120 L370 40 L400 120 L450 120 L480 80 L510 120 L560 120 L600 55 L640 120 L690 120 L720 85 L750 120 L800 120 L840 45 L880 120 L930 120 L960 80 L990 120 L1040 120 L1070 60 L1100 120 L1150 120 L1180 95 L1200 120 L1200 200 Z" />
-    </svg>
-  );
-}
-
 export default function About() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-  // Scroll parallax for depth layers
+  // Scroll parallax for soft depth layers (kept away from section edges
+  // so they never collide with the section dividers above/below).
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const yFar = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const yMid = useTransform(scrollYProgress, [0, 1], [30, -90]);
-  const yNear = useTransform(scrollYProgress, [0, 1], [10, -130]);
-  const orbY = useTransform(scrollYProgress, [0, 1], [-40, 80]);
+  const orbY = useTransform(scrollYProgress, [0, 1], [-50, 70]);
+  const yMid = useTransform(scrollYProgress, [0, 1], [40, -80]);
+  const yNear = useTransform(scrollYProgress, [0, 1], [20, -120]);
 
   return (
     <section id="about" className="py-20 md:py-28 relative overflow-hidden" ref={ref}>
-      {/* Parallax depth backdrop */}
-      <motion.div aria-hidden className="absolute -left-20 top-10 w-[420px] h-[420px] rounded-full blur-[130px] pointer-events-none"
-        style={{ background: "var(--orb-violet)", y: orbY }} />
-      <motion.div aria-hidden className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ y: yFar }}>
-        <TreeLayer fill="var(--text-faint)" opacity={0.5} />
-      </motion.div>
-      <motion.div aria-hidden className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none" style={{ y: yMid }}>
-        <TreeLayer fill="var(--text-dim)" opacity={0.4} />
-      </motion.div>
-      <motion.div aria-hidden className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style={{ y: yNear }}>
-        <TreeLayer fill="var(--text-muted)" opacity={0.25} />
-      </motion.div>
+      {/* Parallax depth backdrop — soft blurred glows at staggered scroll rates */}
+      <motion.div aria-hidden className="absolute -left-24 top-16 w-[420px] h-[420px] rounded-full blur-[140px] pointer-events-none"
+        style={{ background: "var(--orb-green)", y: orbY }} />
+      <motion.div aria-hidden className="absolute right-0 top-1/4 w-[360px] h-[360px] rounded-full blur-[130px] pointer-events-none"
+        style={{ background: "var(--orb-blue)", y: yMid }} />
+      <motion.div aria-hidden className="absolute left-1/3 top-1/2 w-[300px] h-[300px] rounded-full blur-[120px] pointer-events-none"
+        style={{ background: "var(--orb-violet)", y: yNear }} />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <SectionLabel>About Me</SectionLabel>
@@ -122,7 +108,7 @@ export default function About() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "rgba(155,142,196,0.12)" }}>
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "rgba(82,183,136,0.12)" }}>
                     <Briefcase size={13} style={{ color: "var(--accent-violet)" }} />
                   </div>
                   <div>

@@ -31,7 +31,7 @@ const experiences: Exp[] = [
   {
     company: "Talentoza", url: "https://talentoza.com", role: "Multi-Role Contributor",
     period: "Dec 2024 — Jan 2026", isCurrent: false, icon: Briefcase,
-    accentColor: "#a78bfa", accentBg: "rgba(167,139,250,0.08)", accentBorder: "rgba(167,139,250,0.18)",
+    accentColor: "#38bdf8", accentBg: "rgba(56,189,248,0.08)", accentBorder: "rgba(56,189,248,0.18)",
     description: "Worked across two departments at Talentoza — a talent discovery platform. Started in Marketing before transitioning into Software Development, gaining a rare blend of business strategy and technical execution.",
     responsibilities: [
       "Built and maintained landing pages and marketing assets",
@@ -194,7 +194,7 @@ export default function Experience() {
             <defs>
               <linearGradient id="trailGrad" x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#4ade80" />
-                <stop offset="55%" stopColor="#9B8EC4" />
+                <stop offset="55%" stopColor="#34d399" />
                 <stop offset="100%" stopColor="#4A9ECC" />
               </linearGradient>
             </defs>

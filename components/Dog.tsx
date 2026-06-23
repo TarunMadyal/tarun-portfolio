@@ -184,7 +184,7 @@ function DogSVG({ eyeX, eyeY, sleeping, isHappy, isEating }: DogSVGProps) {
         <ellipse cx="52" cy="88" rx="26" ry="15" fill="#C07340" />
 
         {/* Collar */}
-        <rect x="30" y="76" width="44" height="7" rx="3.5" fill="#7c3aed" />
+        <rect x="30" y="76" width="44" height="7" rx="3.5" fill="#2E9E6B" />
         <circle cx="52" cy="79.5" r="3" fill="#fbbf24" />
 
         {/* Front paws */}

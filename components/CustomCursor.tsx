@@ -56,7 +56,7 @@ export default function CustomCursor() {
 
   if (!enabled) return null;
 
-  const accent = theme === "light" ? "#6B47B8" : "#9B8EC4";
+  const accent = theme === "light" ? "#247D5C" : "#5FBF99";
 
   return (
     <>
