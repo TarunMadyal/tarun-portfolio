@@ -1,37 +1,54 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import DayNightToggle from "./DayNightToggle";
 import { useRipple } from "./useRipple";
 
 const navLinks = [
-  { label: "About",      href: "#about"      },
-  { label: "Skills",     href: "#skills"     },
-  { label: "Projects",   href: "#projects"   },
-  { label: "Experience", href: "#experience" },
-  { label: "Contact",    href: "#contact"    },
+  { label: "About",      href: "#about",      id: "about"      },
+  { label: "Skills",     href: "#skills",     id: "skills"     },
+  { label: "Projects",   href: "#projects",   id: "projects"   },
+  { label: "Experience", href: "#experience", id: "experience" },
+  { label: "Contact",    href: "#contact",    id: "contact"    },
 ];
 
-function Logo() {
+const NAV_GRADIENT =
+  "linear-gradient(90deg, var(--accent-green), var(--accent-violet), var(--accent-blue))";
+
+function Logo({ scrolled }: { scrolled: boolean }) {
   return (
-    <a
+    <motion.a
       href="#"
-      className="relative inline-block cursor-pointer group"
-      style={{ paddingRight: 12 }}
+      initial="rest"
+      animate="rest"
+      whileHover="hover"
+      className="relative inline-block cursor-pointer rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+      style={{
+        paddingRight: 12,
+        transform: scrolled ? "scale(0.9)" : "scale(1)",
+        transformOrigin: "left center",
+        transition: "transform 0.3s ease",
+      }}
       aria-label="Tarun Madyal – home"
     >
       <span className="text-xl font-black tracking-tight gradient-text" style={{ letterSpacing: "-0.025em" }}>
         TM
       </span>
-      {/* Tiny leaf accent — positioned top-right of the wordmark */}
-      <svg
+      {/* Tiny leaf accent — sways on hover */}
+      <motion.svg
         width="8"
         height="10"
         viewBox="0 0 8 10"
         fill="none"
-        className="absolute -top-1 right-0 transition-all duration-300 opacity-50 group-hover:opacity-80 group-hover:-translate-y-px"
+        className="absolute -top-1 right-0"
+        style={{ transformBox: "fill-box", transformOrigin: "center bottom" }}
+        variants={{
+          rest:  { rotate: 0, y: 0, opacity: 0.5 },
+          hover: { rotate: [0, -14, 9, -5, 0], y: -2, opacity: 0.85 },
+        }}
+        transition={{ duration: 0.7, ease: "easeInOut" }}
         aria-hidden="true"
       >
         <path
@@ -40,7 +57,45 @@ function Logo() {
         />
         <line x1="4" y1="0.5" x2="4" y2="9.5" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
         <path d="M4 3.5 Q6 4.5 7.5 4" stroke="rgba(255,255,255,0.25)" strokeWidth="0.4" fill="none" />
-      </svg>
+      </motion.svg>
+    </motion.a>
+  );
+}
+
+function DesktopLink({ link, active }: { link: typeof navLinks[number]; active: boolean }) {
+  const [hover, setHover] = useState(false);
+  const color = active || hover ? "var(--text-primary)" : "var(--text-secondary)";
+
+  return (
+    <a
+      href={link.href}
+      aria-current={active ? "true" : undefined}
+      className="relative text-sm cursor-pointer py-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <span style={{ color, transition: "color 0.2s ease" }}>{link.label}</span>
+
+      {active ? (
+        /* Shared-element indicator glides between links as you scroll */
+        <motion.span
+          layoutId="nav-active-underline"
+          className="absolute -bottom-1 left-0 right-0 rounded-full"
+          style={{ height: 2, background: NAV_GRADIENT }}
+          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+        />
+      ) : (
+        /* Hover-grow underline for inactive links */
+        <span
+          className="absolute -bottom-1 left-0 rounded-full transition-all duration-300"
+          style={{
+            height: 2,
+            width: hover ? "100%" : 0,
+            background: "var(--accent-violet)",
+            opacity: 0.75,
+          }}
+        />
+      )}
     </a>
   );
 }
@@ -49,12 +104,34 @@ export default function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [ctaHover,   setCtaHover]   = useState(false);
+  const [active,     setActive]     = useState<string>("");
   const ripple = useRipple();
+
+  const { scrollYProgress } = useScroll();
+  const progressScaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 24);
+    handler();
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  /* Scroll-spy: highlight the section currently crossing the viewport mid-band */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    navLinks.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -64,34 +141,22 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        transition: "padding 0.3s ease, background 0.5s ease, border-color 0.4s ease",
+        transition: "padding 0.3s ease, background 0.5s ease, border-color 0.4s ease, box-shadow 0.5s ease",
         background:           scrolled ? "var(--bg-glass)"  : "transparent",
         backdropFilter:       scrolled ? "blur(20px)"       : "none",
         WebkitBackdropFilter: scrolled ? "blur(20px)"       : "none",
         borderBottom:         scrolled ? "1px solid var(--border-card)" : "1px solid transparent",
+        boxShadow:            scrolled ? "0 8px 32px -12px var(--glow-violet)" : "none",
         padding:              scrolled ? "12px 0" : "20px 0",
       }}
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <Logo />
+        <Logo scrolled={scrolled} />
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm transition-colors duration-200 cursor-pointer relative group"
-              style={{ color: "var(--text-secondary)" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
-            >
-              {link.label}
-              <span
-                className="absolute -bottom-0.5 left-0 w-0 h-px group-hover:w-full transition-all duration-300"
-                style={{ background: "var(--accent-violet)" }}
-              />
-            </a>
+            <DesktopLink key={link.label} link={link} active={active === link.id} />
           ))}
         </div>
 
@@ -106,7 +171,7 @@ export default function Navbar() {
             <motion.a
               href="#contact"
               onPointerDown={ripple}
-              className="btn-primary relative overflow-hidden inline-flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-lg cursor-pointer"
+              className="btn-primary relative overflow-hidden inline-flex items-center gap-2 text-sm font-semibold text-white px-5 py-2.5 rounded-lg cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -150,55 +215,116 @@ export default function Navbar() {
         <div className="md:hidden flex items-center gap-3">
           <DayNightToggle />
           <button
-            className="transition-colors cursor-pointer p-1"
+            className="relative z-50 transition-colors cursor-pointer p-1"
             style={{ color: "var(--text-secondary)" }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Scroll progress bar — sits on the navbar's bottom edge */}
+      <motion.div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 origin-left"
+        style={{
+          height: 2,
+          scaleX: progressScaleX,
+          background: NAV_GRADIENT,
+          opacity: scrolled ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }}
+      />
+
+      {/* Mobile menu + backdrop */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden"
-            style={{
-              background:           "var(--bg-glass)",
-              backdropFilter:       "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderBottom: `1px solid var(--border-card)`,
-            }}
-          >
-            <div className="px-6 py-5 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="py-3 border-b text-sm cursor-pointer transition-colors"
-                  style={{ color: "var(--text-secondary)", borderColor: "var(--border-subtle)" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
+          <>
+            {/* Dim backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden fixed inset-0 -z-10"
+              style={{ background: "rgba(0,0,0,0.45)", top: "100%" }}
+              aria-hidden="true"
+            />
+
+            <motion.div
+              key="menu"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="md:hidden overflow-hidden"
+              style={{
+                background:           "var(--bg-glass)",
+                backdropFilter:       "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                borderBottom: `1px solid var(--border-card)`,
+              }}
+            >
+              <motion.div
+                className="px-6 py-5 flex flex-col gap-1"
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
+                }}
+              >
+                {navLinks.map((link) => {
+                  const isActive = active === link.id;
+                  return (
+                    <motion.a
+                      key={link.label}
+                      href={link.href}
+                      variants={{
+                        hidden: { opacity: 0, x: -14 },
+                        show:   { opacity: 1, x: 0 },
+                      }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      className="flex items-center gap-3 py-3 border-b text-sm cursor-pointer transition-colors"
+                      style={{
+                        color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                        borderColor: "var(--border-subtle)",
+                      }}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <span
+                        className="rounded-full transition-all duration-300"
+                        style={{
+                          width: isActive ? 14 : 0,
+                          height: 2,
+                          background: NAV_GRADIENT,
+                          opacity: isActive ? 1 : 0,
+                        }}
+                      />
+                      {link.label}
+                    </motion.a>
+                  );
+                })}
+                <motion.a
+                  href="#contact"
+                  variants={{
+                    hidden: { opacity: 0, y: 8 },
+                    show:   { opacity: 1, y: 0 },
+                  }}
+                  onPointerDown={ripple}
+                  className="btn-primary relative overflow-hidden text-center text-sm font-semibold text-white px-5 py-3 rounded-xl cursor-pointer mt-4"
                   onClick={() => setMobileOpen(false)}
                 >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="#contact"
-                className="btn-primary text-center text-sm font-semibold text-white px-5 py-3 rounded-xl cursor-pointer mt-4"
-                onClick={() => setMobileOpen(false)}
-              >
-                Hire Me
-              </a>
-            </div>
-          </motion.div>
+                  Hire Me
+                </motion.a>
+              </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.header>
