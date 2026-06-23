@@ -78,7 +78,10 @@ export default function Hero() {
           </motion.a>
 
           <motion.a
-            href="#"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="Tarun-Madyal-Resume.pdf"
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-medium cursor-pointer transition-all duration-200"
             style={{ color: "var(--text-secondary)", border: "1px solid var(--border-card)" }}
             whileHover={{ scale: 1.03 }}
