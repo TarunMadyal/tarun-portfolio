@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, ComponentType } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import {
-  Code2, PenTool, Palette, Presentation, KeyRound, Cloud, Boxes, LucideIcon,
-} from "lucide-react";
 import { SectionLabel, RevealTitle } from "./Reveal";
+import {
+  WebDevIcon, UiUxIcon, FigmaIcon, DeckIcon, AwsIcon, CloudIcon, CubeIcon, SkillIconProps,
+} from "./SkillIcons";
 
 interface Skill {
   title: string;
@@ -13,7 +13,7 @@ interface Skill {
   levelLabel: string;
   blurb: string;        // always-visible subtitle
   expertise: string;    // revealed in hover tooltip
-  icon: LucideIcon;
+  icon: ComponentType<SkillIconProps>;
   accent: string;
   badge?: string;
 }
@@ -24,49 +24,49 @@ const skills: Skill[] = [
     level: 90, levelLabel: "Advanced",
     blurb: "HTML · CSS · JavaScript",
     expertise: "Responsive, performant interfaces built with modern web standards — from structure to deployment.",
-    icon: Code2, accent: "#34d399",
+    icon: WebDevIcon, accent: "#34d399",
   },
   {
     title: "UI / UX Design",
     level: 80, levelLabel: "Proficient",
     blurb: "Interfaces & interaction",
     expertise: "Clean, intentional layouts with purposeful motion — design that feels effortless to use.",
-    icon: Palette, accent: "#f472b6",
+    icon: UiUxIcon, accent: "#f472b6",
   },
   {
     title: "Figma",
     level: 84, levelLabel: "Proficient",
     blurb: "Design & prototyping",
     expertise: "Designing and prototyping interfaces in Figma — components, auto-layout and clean dev handoff.",
-    icon: PenTool, accent: "#fb7185",
+    icon: FigmaIcon, accent: "#fb7185",
   },
   {
     title: "Business Decks",
     level: 85, levelLabel: "Proficient",
     blurb: "Pitch & product decks",
     expertise: "Turning complex ideas into clear, persuasive narratives for investors and stakeholders.",
-    icon: Presentation, accent: "#2dd4bf",
+    icon: DeckIcon, accent: "#2dd4bf",
   },
   {
     title: "AWS IAM",
     level: 70, levelLabel: "Working",
     blurb: "Identity & access",
     expertise: "Roles, policies and least-privilege access design — the security backbone of the cloud.",
-    icon: KeyRound, accent: "#fbbf24",
+    icon: AwsIcon, accent: "#fbbf24",
   },
   {
     title: "Cloud Learning",
     level: 62, levelLabel: "Growing",
     blurb: "EC2 · S3 · fundamentals",
     expertise: "Actively mastering cloud-native architecture and core AWS services. Future-focused.",
-    icon: Cloud, accent: "#fb923c", badge: "Learning",
+    icon: CloudIcon, accent: "#fb923c", badge: "Learning",
   },
   {
     title: "Software Solutions",
     level: 78, levelLabel: "Proficient",
     blurb: "Delivery & problem-solving",
     expertise: "Reliable processes, thorough documentation and pragmatic problem-solving end to end.",
-    icon: Boxes, accent: "#22d3ee",
+    icon: CubeIcon, accent: "#22d3ee",
   },
 ];
 
@@ -183,9 +183,14 @@ function SkillNode({ skill, index }: { skill: Skill; index: number }) {
           <ProgressRing level={skill.level} accent={skill.accent} active={hovered} />
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ background: `${skill.accent}1a`, border: `1px solid ${skill.accent}33` }}
+            style={{
+              background: `${skill.accent}1a`,
+              border: `1px solid ${skill.accent}33`,
+              filter: hovered ? `drop-shadow(0 0 6px ${skill.accent})` : "none",
+              transition: "filter 0.3s",
+            }}
           >
-            <Icon size={22} style={{ color: skill.accent, filter: hovered ? `drop-shadow(0 0 6px ${skill.accent})` : "none", transition: "filter 0.3s" }} strokeWidth={1.7} />
+            <Icon size={22} color={skill.accent} />
           </div>
         </div>
 
