@@ -90,133 +90,23 @@ function Campfire({ inView }: { inView: boolean }) {
   );
 }
 
-/* A gliding bird (gull silhouette) with flapping wings. */
-const BIRDS = [
-  { top: 34, scale: 1.0, dur: 15, delay: 0 },
-  { top: 60, scale: 0.8, dur: 18, delay: 2.5 },
-  { top: 26, scale: 0.7, dur: 21, delay: 6 },
-  { top: 78, scale: 0.9, dur: 16, delay: 1.2 },
-  { top: 50, scale: 0.65, dur: 23, delay: 8 },
-];
-
-function Bird({ top, scale, dur, delay }: { top: number; scale: number; dur: number; delay: number }) {
-  return (
-    <motion.div
-      aria-hidden className="absolute"
-      style={{ top }}
-      initial={{ left: "-8%" }}
-      animate={{ left: "112%" }}
-      transition={{ duration: dur, delay, repeat: Infinity, ease: "linear" }}
-    >
-      <motion.svg
-        width={20 * scale} height={9 * scale} viewBox="0 0 20 9"
-        animate={{ scaleY: [1, 0.5, 1] }}
-        transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <path d="M1 7 Q5.5 1 10 6 Q14.5 1 19 7" stroke="#6b5b4e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      </motion.svg>
-    </motion.div>
-  );
-}
-
-/* LIGHT MODE — sunset dipping behind a mountain ridge, with a flock gliding past. */
-function SunsetScene({ inView }: { inView: boolean }) {
-  return (
-    <div className="relative w-full" style={{ height: 240 }}>
-      {/* dusk sky — warm at the horizon, pink → purple higher up */}
-      <div
-        aria-hidden className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(251,146,60,0.20) 0%, rgba(244,114,182,0.22) 32%, rgba(167,139,250,0.22) 62%, transparent 92%)",
-        }}
-      />
-
-      {/* warm glow around the setting sun */}
-      <motion.div
-        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full blur-[60px] pointer-events-none"
-        style={{
-          bottom: 24, width: 420, height: 230,
-          background: "radial-gradient(circle at 50% 80%, rgba(251,146,60,0.45), rgba(244,114,182,0.22) 45%, transparent 72%)",
-        }}
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 1.1 }}
-      />
-
-      {/* drifting dusk clouds */}
-      {[{ top: 50, w: 96, dur: 42, delay: 0, o: 0.5 }, { top: 92, w: 74, dur: 55, delay: 7, o: 0.38 }].map((c, i) => (
-        <motion.div key={i} aria-hidden className="absolute rounded-full blur-[14px] pointer-events-none"
-          style={{ top: c.top, width: c.w, height: c.w * 0.32, background: "rgba(255,205,200,0.85)", opacity: c.o }}
-          initial={{ left: "-15%" }} animate={{ left: "115%" }}
-          transition={{ duration: c.dur, delay: c.delay, repeat: Infinity, ease: "linear" }} />
-      ))}
-
-      {/* the setting sun — descends into place; lower half hides behind the ridge */}
-      <motion.div
-        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full"
-        style={{
-          width: 104, height: 104, bottom: 4,
-          background: "radial-gradient(circle at 50% 38%, #FFF1C2, #FDB813 55%, #F97316)",
-        }}
-        initial={{ y: -54, opacity: 0 }}
-        animate={inView ? { y: 0, opacity: 1 } : {}}
-        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <motion.span
-          className="absolute rounded-full"
-          style={{ inset: -20, background: "radial-gradient(circle, rgba(253,184,19,0.4), transparent 68%)" }}
-          animate={{ opacity: [0.55, 1, 0.55], scale: [1, 1.08, 1] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
-
-      {/* the mountain — sits in front of the sun, dusk-toned with a sun-kissed rim */}
-      <svg
-        aria-hidden className="absolute bottom-0 left-0 w-full"
-        style={{ height: 110 }} viewBox="0 0 1200 110" preserveAspectRatio="none"
-      >
-        <defs>
-          <linearGradient id="duskMtn" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6d5a9c" />
-            <stop offset="100%" stopColor="#36315a" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M0 86 Q150 70 300 26 Q450 50 600 56 Q750 40 900 30 Q1050 60 1200 84 L1200 110 L0 110 Z"
-          fill="url(#duskMtn)"
-        />
-        {/* sun-kissed ridge highlight */}
-        <path
-          d="M0 86 Q150 70 300 26 Q450 50 600 56 Q750 40 900 30 Q1050 60 1200 84"
-          fill="none" stroke="#fda4c4" strokeWidth="2" strokeOpacity="0.5"
-        />
-      </svg>
-
-      {/* the flock */}
-      {BIRDS.map((b, i) => <Bird key={i} {...b} />)}
-    </div>
-  );
-}
-
 /**
- * Closing vignette at the end of the trail — theme-aware.
- * Dark: a campfire that flares on hover. Light: a sunset with a passing flock.
+ * Closing vignette at the end of the trail.
+ * Dark: a campfire that flares on hover. Light: nothing (handled by the
+ * footer landscape below).
  */
 export default function CampfireClosing() {
   const { theme } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  if (theme === "light") return null;
+
   return (
     <div ref={ref} className="relative w-full overflow-hidden">
-      {theme === "light" ? (
-        <SunsetScene inView={inView} />
-      ) : (
-        <div className="flex items-end justify-center pt-8 pb-16 px-6" style={{ minHeight: 190 }}>
-          <Campfire inView={inView} />
-        </div>
-      )}
+      <div className="flex items-end justify-center pt-8 pb-16 px-6" style={{ minHeight: 190 }}>
+        <Campfire inView={inView} />
+      </div>
     </div>
   );
 }
