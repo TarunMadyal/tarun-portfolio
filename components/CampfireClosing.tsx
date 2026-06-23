@@ -119,48 +119,79 @@ function Bird({ top, scale, dur, delay }: { top: number; scale: number; dur: num
   );
 }
 
-/* LIGHT MODE — a calm sunset over the forest, with a flock gliding past. */
+/* LIGHT MODE — sunset dipping behind a mountain ridge, with a flock gliding past. */
 function SunsetScene({ inView }: { inView: boolean }) {
   return (
-    <div className="relative w-full" style={{ height: 230 }}>
-      {/* warm sky glow rising from the horizon */}
-      <motion.div
-        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full blur-[70px] pointer-events-none"
+    <div className="relative w-full" style={{ height: 240 }}>
+      {/* dusk sky — warm at the horizon, pink → purple higher up */}
+      <div
+        aria-hidden className="absolute inset-0 pointer-events-none"
         style={{
-          bottom: 4, width: 460, height: 240,
-          background: "radial-gradient(circle at 50% 82%, rgba(251,146,60,0.42), rgba(253,224,107,0.22) 42%, transparent 72%)",
+          background:
+            "linear-gradient(to top, rgba(251,146,60,0.20) 0%, rgba(244,114,182,0.22) 32%, rgba(167,139,250,0.22) 62%, transparent 92%)",
+        }}
+      />
+
+      {/* warm glow around the setting sun */}
+      <motion.div
+        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full blur-[60px] pointer-events-none"
+        style={{
+          bottom: 24, width: 420, height: 230,
+          background: "radial-gradient(circle at 50% 80%, rgba(251,146,60,0.45), rgba(244,114,182,0.22) 45%, transparent 72%)",
         }}
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 1.1 }}
       />
 
-      {/* drifting warm clouds */}
-      {[{ top: 56, w: 90, dur: 40, delay: 0, o: 0.55 }, { top: 96, w: 70, dur: 52, delay: 6, o: 0.4 }].map((c, i) => (
+      {/* drifting dusk clouds */}
+      {[{ top: 50, w: 96, dur: 42, delay: 0, o: 0.5 }, { top: 92, w: 74, dur: 55, delay: 7, o: 0.38 }].map((c, i) => (
         <motion.div key={i} aria-hidden className="absolute rounded-full blur-[14px] pointer-events-none"
-          style={{ top: c.top, width: c.w, height: c.w * 0.32, background: "rgba(255,225,180,0.8)", opacity: c.o }}
+          style={{ top: c.top, width: c.w, height: c.w * 0.32, background: "rgba(255,205,200,0.85)", opacity: c.o }}
           initial={{ left: "-15%" }} animate={{ left: "115%" }}
           transition={{ duration: c.dur, delay: c.delay, repeat: Infinity, ease: "linear" }} />
       ))}
 
-      {/* the setting sun — descends gently into place, then glows */}
+      {/* the setting sun — descends into place; lower half hides behind the ridge */}
       <motion.div
         aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full"
         style={{
-          width: 92, height: 92, bottom: 18,
+          width: 104, height: 104, bottom: 4,
           background: "radial-gradient(circle at 50% 38%, #FFF1C2, #FDB813 55%, #F97316)",
         }}
-        initial={{ y: -56, opacity: 0 }}
+        initial={{ y: -54, opacity: 0 }}
         animate={inView ? { y: 0, opacity: 1 } : {}}
-        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.span
           className="absolute rounded-full"
-          style={{ inset: -18, background: "radial-gradient(circle, rgba(253,184,19,0.45), transparent 68%)" }}
-          animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.08, 1] }}
+          style={{ inset: -20, background: "radial-gradient(circle, rgba(253,184,19,0.4), transparent 68%)" }}
+          animate={{ opacity: [0.55, 1, 0.55], scale: [1, 1.08, 1] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.div>
+
+      {/* the mountain — sits in front of the sun, dusk-toned with a sun-kissed rim */}
+      <svg
+        aria-hidden className="absolute bottom-0 left-0 w-full"
+        style={{ height: 110 }} viewBox="0 0 1200 110" preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="duskMtn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#6d5a9c" />
+            <stop offset="100%" stopColor="#36315a" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0 86 Q150 70 300 26 Q450 50 600 56 Q750 40 900 30 Q1050 60 1200 84 L1200 110 L0 110 Z"
+          fill="url(#duskMtn)"
+        />
+        {/* sun-kissed ridge highlight */}
+        <path
+          d="M0 86 Q150 70 300 26 Q450 50 600 56 Q750 40 900 30 Q1050 60 1200 84"
+          fill="none" stroke="#fda4c4" strokeWidth="2" strokeOpacity="0.5"
+        />
+      </svg>
 
       {/* the flock */}
       {BIRDS.map((b, i) => <Bird key={i} {...b} />)}
