@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView, useScroll, useSpring } from "framer-motion";
 import { Shield, Calendar, ArrowUpRight, Briefcase, Code2, Megaphone, LucideIcon } from "lucide-react";
 import { SectionLabel, RevealTitle } from "./Reveal";
+import BrandLogo, { BrandLogoSpec } from "./BrandLogo";
 
 interface Phase {
   icon: LucideIcon; title: string; period: string; color: string; bg: string; border: string; detail: string;
@@ -11,6 +12,7 @@ interface Phase {
 interface Exp {
   company: string; url: string; role: string; period: string; isCurrent: boolean;
   icon: LucideIcon; accentColor: string; accentBg: string; accentBorder: string;
+  logo: BrandLogoSpec;
   description: string; responsibilities: string[]; phases: Phase[] | null;
 }
 
@@ -19,6 +21,7 @@ const experiences: Exp[] = [
     company: "vSecure.ai", url: "https://vsecure.ai", role: "Team Member",
     period: "Jan 2026 — Present", isCurrent: true, icon: Shield,
     accentColor: "#4ade80", accentBg: "rgba(74,222,128,0.08)", accentBorder: "rgba(74,222,128,0.18)",
+    logo: { src: "/vsecure.png", alt: "vSecure.ai logo", bg: "#0e1b2e", fit: "cover" },
     description: "Contributing to the core team at vSecure.ai — an AI-powered security platform. Involved in website development, digital operations, and supporting the product's online presence. Gaining hands-on experience in how real software companies ship and grow.",
     responsibilities: [
       "Website development and maintenance",
@@ -32,6 +35,7 @@ const experiences: Exp[] = [
     company: "Talentoza", url: "https://talentoza.com", role: "Multi-Role Contributor",
     period: "Dec 2024 — Jan 2026", isCurrent: false, icon: Briefcase,
     accentColor: "#38bdf8", accentBg: "rgba(56,189,248,0.08)", accentBorder: "rgba(56,189,248,0.18)",
+    logo: { src: "/talentoza.png", alt: "Talentoza logo", bg: "#ffffff", fit: "contain" },
     description: "Worked across two departments at Talentoza — a talent discovery platform. Started in Marketing before transitioning into Software Development, gaining a rare blend of business strategy and technical execution.",
     responsibilities: [
       "Built and maintained landing pages and marketing assets",
@@ -90,9 +94,7 @@ function ExpCard({ exp, index }: { exp: Exp; index: number }) {
       >
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: exp.accentBg }}>
-              <Icon size={20} style={{ color: exp.accentColor }} />
-            </div>
+            <BrandLogo size={48} {...exp.logo} />
             <div>
               <h3 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>{exp.company}</h3>
               <p className="text-sm font-medium mt-0.5" style={{ color: exp.accentColor }}>{exp.role}</p>

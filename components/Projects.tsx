@@ -4,8 +4,9 @@ import { useRef, useState, useEffect } from "react";
 import {
   motion, useInView, useMotionValue, useSpring, useTransform, AnimatePresence,
 } from "framer-motion";
-import { ExternalLink, Shield, Briefcase, Activity, LucideIcon } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { SectionLabel, RevealTitle } from "./Reveal";
+import BrandLogo, { BrandLogoSpec } from "./BrandLogo";
 
 interface Project {
   name: string;
@@ -13,7 +14,7 @@ interface Project {
   tagline: string;
   description: string;
   contribution: string;
-  icon: LucideIcon;
+  logo: BrandLogoSpec;
   accent: string;
   gradientFrom: string;
   gradientTo: string;
@@ -27,7 +28,8 @@ const projects: Project[] = [
     tagline: "Talent Discovery Platform",
     description: "A talent sourcing and hiring platform connecting businesses with the right professionals, built for streamlined recruitment.",
     contribution: "Built and maintained the website — structure, UI, user-facing features, and performance.",
-    icon: Briefcase, accent: "#2dd4bf", gradientFrom: "#0d9488", gradientTo: "#06b6d4",
+    logo: { src: "/talentoza.png", alt: "Talentoza logo", bg: "#ffffff", fit: "contain" },
+    accent: "#2dd4bf", gradientFrom: "#0d9488", gradientTo: "#06b6d4",
     tags: ["Web Dev", "UI/UX", "Platform"],
   },
   {
@@ -35,7 +37,8 @@ const projects: Project[] = [
     tagline: "Digital Business Hub",
     description: "A digital solutions company offering web development, branding, and growth services to startups and businesses.",
     contribution: "Designed and developed the full website — service pages, positioning, responsive experience.",
-    icon: Activity, accent: "#60a5fa", gradientFrom: "#2563eb", gradientTo: "#06b6d4",
+    logo: { letter: "P", letterColor: "#ec4899", bg: "rgba(236,72,153,0.12)" },
+    accent: "#ec4899", gradientFrom: "#db2777", gradientTo: "#f472b6",
     tags: ["Business", "Branding", "Full Build"],
   },
   {
@@ -43,7 +46,8 @@ const projects: Project[] = [
     tagline: "AI-Powered Security",
     description: "An intelligent security platform using AI to detect, analyze, and respond to threats in real time.",
     contribution: "Contributing to the core team — operations, website, and digital presence.",
-    icon: Shield, accent: "#4ade80", gradientFrom: "#059669", gradientTo: "#0891b2",
+    logo: { src: "/vsecure.png", alt: "vSecure.ai logo", bg: "#0e1b2e", fit: "cover" },
+    accent: "#4ade80", gradientFrom: "#059669", gradientTo: "#0891b2",
     tags: ["AI", "Security", "SaaS"], badge: "Currently Working",
   },
 ];
@@ -126,7 +130,6 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [hovered, setHovered] = useState(false);
-  const Icon = project.icon;
 
   // 3D tilt
   const mx = useMotionValue(0.5);
@@ -207,10 +210,7 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
           <Preview project={project} active={hovered} />
 
           <div className="flex items-start justify-between mb-3">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center"
-              style={{ background: `${project.accent}1a`, border: `1px solid ${project.accent}33` }}>
-              <Icon size={20} style={{ color: project.accent }} />
-            </div>
+            <BrandLogo size={44} {...project.logo} />
             {project.badge && (
               <span className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full"
                 style={{ background: `${project.accent}1a`, color: project.accent, border: `1px solid ${project.accent}33` }}>
