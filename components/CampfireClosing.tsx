@@ -27,7 +27,6 @@ function Campfire({ inView }: { inView: boolean }) {
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* warm ground glow */}
       <motion.div
         aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full blur-[55px] pointer-events-none"
         style={{ bottom: 6, width: 200, height: 120, background: "radial-gradient(ellipse at center, rgba(251,146,60,0.45), transparent 70%)" }}
@@ -35,7 +34,6 @@ function Campfire({ inView }: { inView: boolean }) {
         transition={{ duration: 0.4 }}
       />
 
-      {/* base embers */}
       {EMBERS.map((e, i) => (
         <span key={i} aria-hidden className="absolute rounded-full"
           style={{
@@ -47,7 +45,6 @@ function Campfire({ inView }: { inView: boolean }) {
           }} />
       ))}
 
-      {/* extra sparks on hover */}
       <AnimatePresence>
         {hot && [0, 1, 2, 3].map((i) => (
           <motion.span key={`spark-${i}`} aria-hidden className="absolute rounded-full"
@@ -60,7 +57,6 @@ function Campfire({ inView }: { inView: boolean }) {
         ))}
       </AnimatePresence>
 
-      {/* flame */}
       <motion.div
         className="absolute left-1/2 -translate-x-1/2"
         style={{ bottom: 38, width: 42, height: 64, transformOrigin: "bottom center" }}
@@ -83,7 +79,6 @@ function Campfire({ inView }: { inView: boolean }) {
         </div>
       </motion.div>
 
-      {/* logs + stones */}
       <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: 28 }}>
         <div className="absolute rounded-full" style={{ width: 66, height: 9, background: "linear-gradient(90deg,#5b3a21,#8a5a34)", transform: "rotate(18deg)", left: -33, top: -4 }} />
         <div className="absolute rounded-full" style={{ width: 66, height: 9, background: "linear-gradient(90deg,#8a5a34,#5b3a21)", transform: "rotate(-18deg)", left: -33, top: -4 }} />
@@ -95,79 +90,87 @@ function Campfire({ inView }: { inView: boolean }) {
   );
 }
 
-/* LIGHT MODE — a balanced stone cairn, the classic trail marker. */
-function Cairn({ inView }: { inView: boolean }) {
-  const [hovered, setHovered] = useState(false);
-  // bottom → top
-  const stones = [
-    { w: 64, h: 22, c: "linear-gradient(145deg,#b7c1b9,#94a199)" },
-    { w: 52, h: 19, c: "linear-gradient(145deg,#aab5ad,#879389)" },
-    { w: 42, h: 16, c: "linear-gradient(145deg,#bcc6bd,#9aa69d)" },
-    { w: 30, h: 13, c: "linear-gradient(145deg,#a7b2a9,#828e85)" },
-  ];
+/* A gliding bird (gull silhouette) with flapping wings. */
+const BIRDS = [
+  { top: 34, scale: 1.0, dur: 15, delay: 0 },
+  { top: 60, scale: 0.8, dur: 18, delay: 2.5 },
+  { top: 26, scale: 0.7, dur: 21, delay: 6 },
+  { top: 78, scale: 0.9, dur: 16, delay: 1.2 },
+  { top: 50, scale: 0.65, dur: 23, delay: 8 },
+];
+
+function Bird({ top, scale, dur, delay }: { top: number; scale: number; dur: number; delay: number }) {
   return (
     <motion.div
-      className="relative flex flex-col items-center"
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      data-cursor="hover"
-      initial={{ opacity: 0, scale: 0.85 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      style={{ width: 130 }}
+      aria-hidden className="absolute"
+      style={{ top }}
+      initial={{ left: "-8%" }}
+      animate={{ left: "112%" }}
+      transition={{ duration: dur, delay, repeat: Infinity, ease: "linear" }}
     >
-      {/* soft warm sun glow */}
-      <motion.div
-        aria-hidden className="absolute rounded-full blur-[55px] pointer-events-none"
-        style={{ top: -10, width: 180, height: 140, background: "radial-gradient(circle, rgba(212,172,82,0.35), transparent 70%)" }}
-        animate={{ opacity: hovered ? 0.9 : 0.55 }}
-        transition={{ duration: 0.4 }}
-      />
-
-      {/* stones, stacked with a tiny reveal */}
-      <div className="relative flex flex-col items-center justify-end" style={{ height: 92 }}>
-        {[...stones].reverse().map((s, idx) => {
-          const i = stones.length - 1 - idx; // top index for hover nudge
-          const isTop = idx === 0;
-          return (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: -10, scale: 0.8 }}
-              animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ duration: 0.45, delay: 0.2 + idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              style={{ marginBottom: idx === stones.length - 1 ? 0 : -2 }}
-            >
-              <motion.div
-                style={{
-                  width: s.w, height: s.h, background: s.c,
-                  borderRadius: "50%",
-                  boxShadow: "0 3px 6px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.4)",
-                }}
-                animate={isTop ? { y: hovered ? -4 : 0, rotate: hovered ? -4 : 0 } : {}}
-                transition={{ type: "spring", stiffness: 300, damping: 14 }}
-              />
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* small sprout at the base */}
-      <motion.svg width="34" height="22" viewBox="0 0 34 22" className="absolute" style={{ bottom: -2, right: 18 }} aria-hidden>
-        <path d="M17 22 L17 10" stroke="#2E7D52" strokeWidth="1.4" strokeLinecap="round" />
-        <motion.path d="M17 13 C 11 13 8 9 8 5 C 13 5 17 8 17 13Z" fill="#3FAE72"
-          style={{ transformOrigin: "17px 13px" }}
-          animate={{ rotate: hovered ? -8 : 0 }} transition={{ type: "spring", stiffness: 200, damping: 12 }} />
-        <motion.path d="M17 15 C 23 15 26 11 26 7 C 21 7 17 10 17 15Z" fill="#52B788"
-          style={{ transformOrigin: "17px 15px" }}
-          animate={{ rotate: hovered ? 8 : 0 }} transition={{ type: "spring", stiffness: 200, damping: 12 }} />
+      <motion.svg
+        width={20 * scale} height={9 * scale} viewBox="0 0 20 9"
+        animate={{ scaleY: [1, 0.5, 1] }}
+        transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <path d="M1 7 Q5.5 1 10 6 Q14.5 1 19 7" stroke="#6b5b4e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
       </motion.svg>
     </motion.div>
   );
 }
 
+/* LIGHT MODE — a calm sunset over the forest, with a flock gliding past. */
+function SunsetScene({ inView }: { inView: boolean }) {
+  return (
+    <div className="relative w-full" style={{ height: 230 }}>
+      {/* warm sky glow rising from the horizon */}
+      <motion.div
+        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full blur-[70px] pointer-events-none"
+        style={{
+          bottom: 4, width: 460, height: 240,
+          background: "radial-gradient(circle at 50% 82%, rgba(251,146,60,0.42), rgba(253,224,107,0.22) 42%, transparent 72%)",
+        }}
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 1.1 }}
+      />
+
+      {/* drifting warm clouds */}
+      {[{ top: 56, w: 90, dur: 40, delay: 0, o: 0.55 }, { top: 96, w: 70, dur: 52, delay: 6, o: 0.4 }].map((c, i) => (
+        <motion.div key={i} aria-hidden className="absolute rounded-full blur-[14px] pointer-events-none"
+          style={{ top: c.top, width: c.w, height: c.w * 0.32, background: "rgba(255,225,180,0.8)", opacity: c.o }}
+          initial={{ left: "-15%" }} animate={{ left: "115%" }}
+          transition={{ duration: c.dur, delay: c.delay, repeat: Infinity, ease: "linear" }} />
+      ))}
+
+      {/* the setting sun — descends gently into place, then glows */}
+      <motion.div
+        aria-hidden className="absolute left-1/2 -translate-x-1/2 rounded-full"
+        style={{
+          width: 92, height: 92, bottom: 18,
+          background: "radial-gradient(circle at 50% 38%, #FFF1C2, #FDB813 55%, #F97316)",
+        }}
+        initial={{ y: -56, opacity: 0 }}
+        animate={inView ? { y: 0, opacity: 1 } : {}}
+        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.span
+          className="absolute rounded-full"
+          style={{ inset: -18, background: "radial-gradient(circle, rgba(253,184,19,0.45), transparent 68%)" }}
+          animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.08, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </motion.div>
+
+      {/* the flock */}
+      {BIRDS.map((b, i) => <Bird key={i} {...b} />)}
+    </div>
+  );
+}
+
 /**
- * Quiet closing vignette at the end of the trail — theme-aware.
- * Dark: a campfire that flares on hover. Light: a stone cairn trail marker.
+ * Closing vignette at the end of the trail — theme-aware.
+ * Dark: a campfire that flares on hover. Light: a sunset with a passing flock.
  */
 export default function CampfireClosing() {
   const { theme } = useTheme();
@@ -175,8 +178,14 @@ export default function CampfireClosing() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <div ref={ref} className="relative flex items-end justify-center pt-8 pb-16 px-6 overflow-hidden" style={{ minHeight: 190 }}>
-      {theme === "light" ? <Cairn inView={inView} /> : <Campfire inView={inView} />}
+    <div ref={ref} className="relative w-full overflow-hidden">
+      {theme === "light" ? (
+        <SunsetScene inView={inView} />
+      ) : (
+        <div className="flex items-end justify-center pt-8 pb-16 px-6" style={{ minHeight: 190 }}>
+          <Campfire inView={inView} />
+        </div>
+      )}
     </div>
   );
 }
