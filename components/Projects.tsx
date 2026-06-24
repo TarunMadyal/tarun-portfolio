@@ -262,7 +262,7 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
 
         {project.creature === "cow" && <Cow active={hovered} />}
 
-        <div className="relative z-10 flex flex-col h-full" style={{ transform: "translateZ(40px)" }}>
+        <div className="relative z-10 flex flex-col h-full">
           <Preview project={project} active={hovered} />
 
           <div className="flex items-start justify-between mb-3">
@@ -293,7 +293,7 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
             )}
           </AnimatePresence>
 
-          <div className="flex items-center justify-between mt-auto pt-1">
+          <div className="relative z-20 flex items-center justify-between mt-auto pt-1">
             <div className="flex flex-wrap gap-1.5">
               {project.tags.map((tag) => (
                 <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md"
@@ -303,8 +303,9 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
               ))}
             </div>
             <a href={project.url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-semibold ml-3 group/link" style={{ color: project.accent }}
-              onClick={(e) => e.stopPropagation()}>
+              data-cursor="hover"
+              className="relative z-20 flex items-center gap-1.5 text-xs font-semibold ml-3 group/link cursor-pointer"
+              style={{ color: project.accent, pointerEvents: "auto" }}>
               Visit
               <ExternalLink size={12} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
             </a>
