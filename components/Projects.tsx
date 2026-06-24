@@ -20,6 +20,7 @@ interface Project {
   gradientTo: string;
   tags: string[];
   badge?: string;
+  creature?: "cow";
 }
 
 const projects: Project[] = [
@@ -53,11 +54,11 @@ const projects: Project[] = [
   {
     name: "Milk App", url: "https://milk-e8i6xldut-tarun20.vercel.app/",
     tagline: "Dairy Inventory Management",
-    description: "A dairy management app to track milk stock, sales, and daily operations — keeping inventory and records organized in one place.",
-    contribution: "Designed and built the full app — data models, inventory tracking, and a clean responsive interface.",
+    description: "A custom app I built for a milk vendor next to my house. He used to spend 2–3 hours every day calculating everything by hand, and one missed entry would throw it all off.",
+    contribution: "Built to his exact requirements — now every single unit is recorded with the total amount and a timestamp, nothing slips through, and his daily accounting just works. Made his life a whole lot easier.",
     logo: { letter: "M", letterColor: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
     accent: "#3b82f6", gradientFrom: "#2563eb", gradientTo: "#60a5fa",
-    tags: ["Dairy", "Inventory", "Web App"],
+    tags: ["Dairy", "Inventory", "Web App"], creature: "cow",
   },
 ];
 
@@ -132,6 +133,50 @@ function Vine({ accent, active, corner }: { accent: string; active: boolean; cor
         />
       ))}
     </svg>
+  );
+}
+
+/* Cute mascot cow that bobs, blinks and perks up on hover */
+function Cow({ active }: { active: boolean }) {
+  return (
+    <motion.div
+      className="absolute z-30 pointer-events-none"
+      style={{ top: 8, right: 10, width: 54, height: 54, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.18))" }}
+      animate={{ y: active ? [0, -5, 0] : [0, -2.5, 0], rotate: active ? [-3, 3, -3] : [-1.5, 1.5, -1.5] }}
+      transition={{ duration: active ? 1.1 : 2.4, repeat: Infinity, ease: "easeInOut" }}
+      aria-hidden
+    >
+      <svg width="54" height="54" viewBox="0 0 64 64">
+        {/* horns */}
+        <path d="M21 17 q-4 -7 -8 -5 q4 1 5 8Z" fill="#fde68a" stroke="#1f2937" strokeWidth="1.1" strokeLinejoin="round" />
+        <path d="M43 17 q4 -7 8 -5 q-4 1 -5 8Z" fill="#fde68a" stroke="#1f2937" strokeWidth="1.1" strokeLinejoin="round" />
+        {/* ears */}
+        <ellipse cx="13" cy="31" rx="7" ry="4.6" fill="#ffffff" stroke="#1f2937" strokeWidth="1.4" />
+        <ellipse cx="51" cy="31" rx="7" ry="4.6" fill="#ffffff" stroke="#1f2937" strokeWidth="1.4" />
+        <ellipse cx="12" cy="31" rx="3" ry="2.2" fill="#fbcfe8" />
+        <ellipse cx="52" cy="31" rx="3" ry="2.2" fill="#fbcfe8" />
+        {/* head */}
+        <path d="M15 31 q0 -17 17 -17 q17 0 17 17 q0 15 -17 15 q-17 0 -17 -15Z" fill="#ffffff" stroke="#1f2937" strokeWidth="1.5" />
+        {/* spots */}
+        <ellipse cx="23" cy="24" rx="4.2" ry="3.2" fill="#1f2937" opacity="0.9" />
+        <ellipse cx="43" cy="22" rx="3.2" ry="2.4" fill="#1f2937" opacity="0.9" />
+        {/* eyes (blink) */}
+        <motion.g
+          style={{ transformBox: "fill-box", transformOrigin: "center" }}
+          animate={{ scaleY: [1, 1, 0.1, 1, 1] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", times: [0, 0.9, 0.94, 0.98, 1] }}
+        >
+          <circle cx="25" cy="31" r="2.4" fill="#1f2937" />
+          <circle cx="39" cy="31" r="2.4" fill="#1f2937" />
+          <circle cx="25.8" cy="30.2" r="0.8" fill="#ffffff" />
+          <circle cx="39.8" cy="30.2" r="0.8" fill="#ffffff" />
+        </motion.g>
+        {/* snout */}
+        <ellipse cx="32" cy="39" rx="10.5" ry="7.2" fill="#fbcfe8" stroke="#1f2937" strokeWidth="1.4" />
+        <ellipse cx="28" cy="39" rx="1.5" ry="2" fill="#9d174d" />
+        <ellipse cx="36" cy="39" rx="1.5" ry="2" fill="#9d174d" />
+      </svg>
+    </motion.div>
   );
 }
 
@@ -214,6 +259,8 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
 
         <Vine accent={project.accent} active={hovered} corner="tl" />
         <Vine accent={project.accent} active={hovered} corner="br" />
+
+        {project.creature === "cow" && <Cow active={hovered} />}
 
         <div className="relative z-10 flex flex-col h-full" style={{ transform: "translateZ(40px)" }}>
           <Preview project={project} active={hovered} />
