@@ -50,6 +50,15 @@ const projects: Project[] = [
     accent: "#4ade80", gradientFrom: "#059669", gradientTo: "#0891b2",
     tags: ["AI", "Security", "SaaS"], badge: "Currently Working",
   },
+  {
+    name: "Milk App", url: "https://milk-e8i6xldut-tarun20.vercel.app/",
+    tagline: "Dairy Inventory Management",
+    description: "A dairy management app to track milk stock, sales, and daily operations — keeping inventory and records organized in one place.",
+    contribution: "Designed and built the full app — data models, inventory tracking, and a clean responsive interface.",
+    logo: { letter: "M", letterColor: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
+    accent: "#3b82f6", gradientFrom: "#2563eb", gradientTo: "#60a5fa",
+    tags: ["Dairy", "Inventory", "Web App"],
+  },
 ];
 
 /* Mock-browser preview that "boots up" on hover */
