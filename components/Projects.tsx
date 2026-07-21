@@ -180,10 +180,12 @@ function Cow({ active }: { active: boolean }) {
   );
 }
 
-function ProjectCard({ project, index, reduced }: { project: Project; index: number; reduced: boolean }) {
+function ProjectCard({ project, index, reduced, touch }: { project: Project; index: number; reduced: boolean; touch: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [hovered, setHovered] = useState(false);
+  // On touch devices there's no hover, so surface the contribution + animations by default.
+  const revealed = hovered || touch;
 
   // 3D tilt
   const mx = useMotionValue(0.5);
@@ -257,13 +259,13 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
           }}
         />
 
-        <Vine accent={project.accent} active={hovered} corner="tl" />
-        <Vine accent={project.accent} active={hovered} corner="br" />
+        <Vine accent={project.accent} active={revealed} corner="tl" />
+        <Vine accent={project.accent} active={revealed} corner="br" />
 
-        {project.creature === "cow" && <Cow active={hovered} />}
+        {project.creature === "cow" && <Cow active={revealed} />}
 
         <div className="relative z-10 flex flex-col h-full">
-          <Preview project={project} active={hovered} />
+          <Preview project={project} active={revealed} />
 
           <div className="flex items-start justify-between mb-3">
             <BrandLogo size={44} {...project.logo} />
@@ -281,7 +283,7 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
           <p className="text-sm leading-relaxed mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>{project.description}</p>
 
           <AnimatePresence initial={false}>
-            {hovered && (
+            {revealed && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }} className="overflow-hidden">
@@ -319,7 +321,11 @@ function ProjectCard({ project, index, reduced }: { project: Project; index: num
 export default function Projects() {
   const ref = useRef<HTMLElement>(null);
   const [reduced, setReduced] = useState(false);
-  useEffect(() => setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
+  const [touch, setTouch] = useState(false);
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setTouch(window.matchMedia("(hover: none)").matches);
+  }, []);
 
   return (
     <section id="projects" className="py-20 md:py-28 relative" ref={ref}>
@@ -332,7 +338,7 @@ export default function Projects() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, i) => (
-            <ProjectCard key={project.name} project={project} index={i} reduced={reduced} />
+            <ProjectCard key={project.name} project={project} index={i} reduced={reduced} touch={touch} />
           ))}
         </div>
       </div>
